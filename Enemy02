@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Enemy02 : MonoBehaviour {
+
+    private int health = 2;
+    private Rigidbody2D rb;
+    private AudioSource ShootSound;
+    public GameObject EnemyBullet;
+    public bool Isleft;
+
+	void Start () {
+        ShootSound = GetComponent<AudioSource>();
+        rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(Shoot());
+    }
+
+    private void Update()
+    {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator Shoot()
+    {
+        Start:
+        yield return new WaitForSeconds(3f);
+        Instantiate(EnemyBullet, gameObject.transform);
+        goto Start;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "LightBullet")
+        {
+            health -= 1;
+        }
+        if (collision.transform.tag == "HeavyBullet")
+        {
+            health -= 3;
+        }
+    }
+
+}
